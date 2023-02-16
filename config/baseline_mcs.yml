@@ -1,0 +1,40 @@
+exp_name: 'baseline_mcs'
+outdir: './experiments/'
+
+num_gpu: 1
+model_name: 'ViT-B-32-quickgelu'
+model_dataset_name: 'laion400m_e32'
+dataset:
+    train_prefix: 'C:/Users/enesm/visual-product-recognition-2023-starter-kit/Product10K/train/'
+    train_list: 'C:/Users/enesm/visual-product-recognition-2023-starter-kit/Product10K/train.csv'
+    val_prefix: 'C:/Users/enesm/visual-product-recognition-2023-starter-kit/Product10K/test/'
+    val_list: 'C:/Users/enesm/visual-product-recognition-2023-starter-kit//Product10K/test_kaggletest.csv'
+    seed: 42
+    num_of_classes: 9691
+    input_size: 224
+    batch_size: 44
+    augmentations: 'default'
+    augmentations_valid: 'default'
+    num_workers: 4
+
+model:
+    arch: 'resnet18'
+test:
+    development_test_data: "development_test_data/"
+    gallery_csv: "development_test_data/gallery.csv"
+    query_csv: "development_test_data/queries.csv"
+train:
+    optimizer: 'SGD'
+    learning_rate: 0.000001
+    start_lr: 0.0000005
+    end_lr: 0.00005
+    momentum: 0.9
+    weight_decay: 0.0003
+    lr_schedule:
+        name: 'StepLR'
+        step_size: 30
+        gamma: 0.1
+    n_epoch: 50
+    label_smoothing: false
+    eps: 0.01
+    freq_vis: 500
