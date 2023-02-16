@@ -102,7 +102,7 @@ def main():
                 train_iter.set_description('Epoch: {}; step: {}; loss: {:.4f}; acc: {:.4f}; acc_avg: {:.4f}; lr: {:.5f}'.format(epoch, step, loss_avg,acc,acc_avg,get_lr(optimizer)))
             #scheduler.step()
 
-            if step%config.train.freq_vis==0 and not step == 0:
+            if step%config.train.freq_vis==0:
                 basel=val_on_test.MCS_BaseLine_Ranker(net,config.test.development_test_data,config.test.gallery_csv,config.test.query_csv)
                 epoch_avg_acc=basel.predict_product_ranks()
                 print(epoch_avg_acc)
