@@ -10,7 +10,7 @@ import numpy as np
 
 import utils
 
-from tqdm import tqdm
+from tqdm.notebook import tqdm
 from utils import AverageMeter,get_lr
 from data_utils import get_dataloader
 from models import models
