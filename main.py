@@ -71,8 +71,8 @@ def main():
         train_iter = tqdm(train_loader, desc='Train', dynamic_ncols=True, position=1)
 
         for step, (img1, img2) in enumerate(train_iter):
-            out1 = net.module.encode_image(img1.cuda().to(memory_format=torch.contiguous_format))
-            out2 = net.module.encode_image(img2.cuda().to(memory_format=torch.contiguous_format))
+            out1 = net.encode_image(img1.cuda().to(memory_format=torch.contiguous_format))
+            out2 = net.encode_image(img2.cuda().to(memory_format=torch.contiguous_format))
             logits = out2 @ out1.T
             
             
