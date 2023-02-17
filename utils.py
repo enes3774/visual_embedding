@@ -76,7 +76,7 @@ def get_optimizer(config, net):
     print("Opt: ", config.train.optimizer)
 
     if config.train.optimizer == 'SGD':
-        optimizer = torch.optim.Adam(net.parameters(),
+        optimizer = torch.optim.SGD(net.parameters(),
                                     lr=lr,
                                     momentum=config.train.momentum,
                                     weight_decay=config.train.weight_decay)
