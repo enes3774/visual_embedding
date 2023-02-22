@@ -12,10 +12,10 @@ dataset:
     seed: 42
     num_of_classes: 9691
     input_size: 224
-    batch_size: 44
-    augmentations: 'default'
+    batch_size: 32
+    augmentations: 'augmix'
     augmentations_valid: 'default'
-    num_workers: 4
+    num_workers: 2
 
 model:
     arch: 'resnet18'
@@ -29,7 +29,7 @@ train:
     start_lr: 0.0000005
     end_lr: 0.00005
     momentum: 0.9
-    weight_decay: 0.0003
+    weight_decay: 0.001
     lr_schedule:
         name: 'StepLR'
         step_size: 30
