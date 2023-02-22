@@ -9,7 +9,7 @@ import torch
 import numpy as np
 
 import utils
-
+from torch.nn import functional as F
 from tqdm import tqdm
 from utils import AverageMeter,get_lr
 from data_utils import get_dataloader
@@ -19,7 +19,17 @@ from utils import convert_dict_to_tuple
 import val_on_test
 import math
 from torch import nn
+import transformers
+def cross_entropy(preds, targets, reduction='none'):
+    log_softmax = nn.LogSoftmax(dim=-1)
+    loss = (-targets * log_softmax(preds)).sum(1)
+    if reduction == "none":
+        return loss
+    elif reduction == "mean":
+        return loss.mean()
+torch.backends.cudnn.enabled = False
 def main():
+    global net, acc_list,train_loader,img1,img2
     """
     Run train process of classification model
     :param args: all parameters necessary for launch
@@ -60,10 +70,11 @@ def main():
     
 
     
-
-
+    
+    acc_list=[]
     for epoch in train_epoch:
-        net.train()
+        
+        net.eval()
 
         loss_stat = AverageMeter('Loss')
         acc_stat = AverageMeter('Acc.')
@@ -74,8 +85,18 @@ def main():
             out1 = net.encode_image(img1.cuda().to(memory_format=torch.contiguous_format))
             out2 = net.encode_image(img2.cuda().to(memory_format=torch.contiguous_format))
             logits = out2 @ out1.T
+            """
+            images_similarity = out1 @ out1.T
+            texts_similarity = out2 @ out2.T
+            targets = F.softmax(
+            (images_similarity + texts_similarity) /2, dim=-1
+        )
+            texts_loss = cross_entropy(logits, targets, reduction='none')
+            images_loss = cross_entropy(logits.T, targets.T, reduction='none')
+            loss =  (images_loss + texts_loss) / 2.0 # shape: (batch_size)
             
             
+            """
             num_of_samples = img1.shape[0]
             loss =  criterion(logits, torch.arange(num_of_samples).cuda())
             acc=np.mean(np.array(torch.argmax(logits.to("cpu"), axis=1) == torch.arange(num_of_samples)))
@@ -102,10 +123,13 @@ def main():
                 train_iter.set_description('Epoch: {}; step: {}; loss: {:.4f}; acc: {:.4f}; acc_avg: {:.4f}; lr: {:.5f}'.format(epoch, step, loss_avg,acc,acc_avg,get_lr(optimizer)))
             #scheduler.step()
 
-            if step%500==0:
+            if step%500==0 and not step == 0:
                 basel=val_on_test.MCS_BaseLine_Ranker(net,config.test.development_test_data,config.test.gallery_csv,config.test.query_csv)
                 epoch_avg_acc=basel.predict_product_ranks()
+                acc_list.append(epoch_avg_acc)
                 print(epoch_avg_acc)
+            del out1,out2,loss,logits
+            torch.cuda.empty_cache()
 # smooth the loss
 
         print('Train process of epoch: {} is done; \n loss: {:.4f}'.format(epoch, loss_avg))
