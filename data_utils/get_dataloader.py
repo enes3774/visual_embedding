@@ -90,7 +90,7 @@ class DifferentClassSampler_random(Sampler):
             perm_data[i]=list(combinations(classs, 2))
         batch_indices=[]
         perm_data_copy=copy.deepcopy(perm_data)
-        while len(batch_indices)<10000:
+        while len(batch_indices)<1000:
             batch=[]
             
             samples = random.sample(sorted(perm_data), self.batch_size)
@@ -116,10 +116,10 @@ def get_dataloaders(config):
     :return:
     """
     print("Preparing train reader...")
-    sampler = DifferentClassSampler_random(pandas.read_csv(config.dataset.train_list),config.dataset.batch_size)
+    sampler = DifferentClassSampler_random(pandas.read_csv(config.dataset.val_list),config.dataset.batch_size)
     train_dataset = dataset.Product10KDataset(
-        path=config.dataset.train_prefix,
-        root=config.dataset.train_prefix, annotation_file=config.dataset.train_list,
+        path=config.dataset.val_prefix,
+        root=config.dataset.val_prefix, annotation_file=config.dataset.val_list,
         transforms=augmentations.get_train_aug(config)
     )
     train_loader = torch.utils.data.DataLoader(
