@@ -1,7 +1,6 @@
 import torchvision as tv
 import open_clip
 from torchvision.transforms import transforms
-from RandAugment import RandAugment
 def _convert_to_rgb(image):
     return image.convert('RGB')
 def get_train_aug(config):
