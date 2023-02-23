@@ -11,7 +11,7 @@ def load_model(config):
     """
     model, _, _ = open_clip.create_model_and_transforms(config.model_name, pretrained=config.model_dataset_name)
     model.to("cuda:0")
-    return model
+    return model.visual
 """
 arch = config.model.arch
 num_classes = config.dataset.num_of_classes
