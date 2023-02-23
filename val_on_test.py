@@ -57,7 +57,7 @@ class MCS_BaseLine_Ranker:
         self.model=model
         self.model.to(self.device)
         print('Weights are loaded, fc layer is deleted!')
-        self.embedding_shape=512
+        self.embedding_shape=self.exp_cfg.dimm
 
     def raise_aicrowd_error(self, msg):
         """ Will be used by the evaluator to provide logs, DO NOT CHANGE """
