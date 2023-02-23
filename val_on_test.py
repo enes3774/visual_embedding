@@ -106,7 +106,7 @@ class MCS_BaseLine_Ranker:
             for i, images in tqdm(enumerate(gallery_loader),
                                 total=len(gallery_loader)):
                 images = images.to(self.device)
-                outputs = self.model.encode_image(images)
+                outputs = self.model(images)
                 outputs = outputs.data.cpu().numpy()
                 gallery_embeddings[
                     i*self.batch_size:(i*self.batch_size + self.batch_size), :
@@ -115,7 +115,7 @@ class MCS_BaseLine_Ranker:
             for i, images in tqdm(enumerate(query_loader),
                                 total=len(query_loader)):
                 images = images.to(self.device)
-                outputs = self.model.encode_image(images)
+                outputs = self.model(images)
                 outputs = outputs.data.cpu().numpy()
                 query_embeddings[
                     i*self.batch_size:(i*self.batch_size + self.batch_size), :
